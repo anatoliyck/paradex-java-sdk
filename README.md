@@ -2,6 +2,8 @@
 
 SDK for Paradex API trading with Java.
 
+See [Paradex API Reference](https://docs.paradex.trade/api-reference/general-information)
+
 ## Installation
 
 ### Building From Source
