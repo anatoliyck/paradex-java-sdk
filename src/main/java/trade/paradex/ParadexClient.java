@@ -53,8 +53,14 @@ public class ParadexClient {
 
         private final String url;
         private final String chainId;
+        private boolean useCacheableJWT = true;
         private HttpClient httpClient = DEFAULT_CLIENT;
         private HttpClientResolver httpClientResolver;
+
+        public ParadexClientBuilder useCacheableJWT(boolean useCacheableJWT) {
+            this.useCacheableJWT = useCacheableJWT;
+            return this;
+        }
 
         public ParadexClientBuilder httpClient(HttpClient httpClient) {
             this.httpClient = Objects.requireNonNull(httpClient, "httpClient cannot be null");
@@ -71,7 +77,9 @@ public class ParadexClient {
                     ? this.httpClientResolver
                     : new StaticHttpClientResolver(httpClient);
 
-            ParadexAuthAPIImpl authApi = new CacheableParadexAuthAPI(url, chainId, httpClientResolver);
+            ParadexAuthAPIImpl authApi = useCacheableJWT
+                    ? new CacheableParadexAuthAPI(url, chainId, httpClientResolver)
+                    : new ParadexAuthAPIImpl(url, chainId, httpClientResolver);
             ParadexAccountAPI accountApi = new ParadexAccountAPIImpl(url, authApi, httpClientResolver);
             ParadexMarketAPI marketApi = new ParadexMarketAPIImpl(url, httpClient);
             ParadexOrderAPI orderApi = new ParadexOrderAPIImpl(url, chainId, authApi, httpClientResolver);

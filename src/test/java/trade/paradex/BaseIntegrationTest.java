@@ -1,13 +1,21 @@
 package trade.paradex;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.model.HttpRequest;
+import org.mockserver.model.HttpResponse;
 import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import trade.paradex.model.ParadexAccount;
+import trade.paradex.utils.Pair;
+
+import java.time.Instant;
 
 @Testcontainers
 public class BaseIntegrationTest {
@@ -28,7 +36,6 @@ public class BaseIntegrationTest {
 
     public static ParadexClient PARADEX_CLIENT;
 
-
     @BeforeAll
     public static void beforeAll() {
         String host = MOCK_SERVER_CONTAINER.getHost();
@@ -37,11 +44,35 @@ public class BaseIntegrationTest {
         MOCK_SERVER_CLIENT = new MockServerClient(host, port);
 
         String serverURL = "http://" + host + ":" + port;
-        PARADEX_CLIENT = ParadexClient.builder(serverURL, TEST_CHAIN_ID).build();
+        PARADEX_CLIENT = ParadexClient.builder(serverURL, TEST_CHAIN_ID)
+                .useCacheableJWT(false)
+                .build();
+    }
+
+    @AfterEach
+    public void afterEach() {
+        MOCK_SERVER_CLIENT.reset();
     }
 
     @AfterAll
     public static void afterAll() {
         MOCK_SERVER_CLIENT.close();
+    }
+
+    protected Pair<HttpRequest, String> mockAuthAPI() {
+        String jwt = JWT.create().withExpiresAt(Instant.now().plusSeconds(300))
+                .sign(Algorithm.none());
+
+        HttpRequest httpRequest = HttpRequest.request()
+                .withMethod("POST")
+                .withPath("/v1/auth");
+        MOCK_SERVER_CLIENT.when(httpRequest)
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(200)
+                                .withBody("{\"jwt_token\":\"" + jwt + "\"}")
+                );
+
+        return Pair.of(httpRequest, jwt);
     }
 }
