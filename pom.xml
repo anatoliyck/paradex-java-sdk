@@ -30,14 +30,17 @@
         <bouncycastle.version>1.80</bouncycastle.version>
         <lombok.version>1.18.36</lombok.version>
         <jackson.version>2.18.3</jackson.version>
-        <slf4j.version>2.0.16</slf4j.version>
+        <slf4j.version>2.0.17</slf4j.version>
         <starknet.version>0.13.1</starknet.version>
         <kotlin.reflect.version>1.8.22</kotlin.reflect.version>
         <java.websocket.version>1.6.0</java.websocket.version>
         <auth0.jwt.version>4.5.0</auth0.jwt.version>
 
         <!-- Test dependencies versions -->
-        <junit.version>5.11.4</junit.version>
+        <log4j.version>2.24.3</log4j.version>
+        <junit.version>5.12.0</junit.version>
+        <testcontainers.version>1.20.6</testcontainers.version>
+        <mockserver.version>5.15.0</mockserver.version>
     </properties>
 
     <dependencyManagement>
@@ -46,19 +49,6 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-simple</artifactId>
-                <version>${slf4j.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit</groupId>
-                <artifactId>junit-bom</artifactId>
-                <version>${junit.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>com.swmansion.starknet</groupId>
@@ -125,6 +115,52 @@
             <version>${jackson.version}</version>
         </dependency>
 
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
+            <version>${log4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-client-java-no-dependencies</artifactId>
+            <version>${mockserver.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>mockserver</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
