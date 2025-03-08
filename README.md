@@ -17,6 +17,8 @@ TODO...
 
 ## Usage Examples
 
+See more complex [examples](examples). You can also checkout the repo and run any of the [examples](examples).
+
 ```java
 import trade.paradex.ParadexClient;
 import trade.paradex.api.dto.*;
