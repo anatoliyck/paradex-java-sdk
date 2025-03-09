@@ -19,6 +19,7 @@ TODO...
 
 See more complex [examples](examples). You can also checkout the repo and run any of the [examples](examples).
 
+### API
 ```java
 import trade.paradex.ParadexClient;
 import trade.paradex.api.dto.*;
@@ -64,6 +65,41 @@ public class Example {
         // Get account positions
         ParadexResultsResponseDTO<ParadexPositionDTO> positions = client.accountAPI().getPositions(account);
         System.out.println(positions);
+    }
+}
+```
+
+### Websocket
+```java
+import com.fasterxml.jackson.databind.JsonNode;
+import trade.paradex.ParadexClient;
+import trade.paradex.api.dto.ParadexMarketSummaryDTO;
+import trade.paradex.model.ParadexEnvironment;
+import trade.paradex.utils.JsonUtils;
+import trade.paradex.ws.ParadexSubscriptionListener;
+import trade.paradex.ws.ParadexWebsocketClient;
+
+public class WebsocketExample {
+
+    public static void main(String[] args) throws Exception {
+        ParadexEnvironment environment = ParadexEnvironment.TESTNET; // or ParadexEnvironment.MAINNET
+        ParadexClient client = ParadexClient.builder(environment)
+                .build();
+
+        ParadexWebsocketClient websocketClient = new ParadexWebsocketClient(environment.getWsUrl() + "/v1", null, client);
+
+        ParadexSubscriptionListener subscriptionListener = new ParadexSubscriptionListener() {
+            @Override
+            public void onMessage(JsonNode data) {
+                System.out.println(data); // print data to console
+            }
+        };
+        websocketClient.subscribe("markets_summary", subscriptionListener);
+        websocketClient.connectBlocking();
+
+        Thread.sleep(10_000); // await 10 seconds
+
+        websocketClient.shutdown(); // close ws connection and shutdown the client
     }
 }
 ```
