@@ -14,6 +14,14 @@ public interface ParadexMarketAPI {
     ParadexMarketBestBidOfferDTO getMarketBBO(String market);
 
     /**
+     * Get markets static data component.
+     *
+     * @param market specific market(e.g. BTC-USD-PERP). Optional
+     * @return List of {@link ParadexMarketDTO}
+     */
+    ParadexResultsResponseDTO<ParadexMarketDTO> getMarkets(String market);
+
+    /**
      * Get markets dynamic data component.
      *
      * @param market name of the market for which summary is requested (for all available markets use `ALL`)

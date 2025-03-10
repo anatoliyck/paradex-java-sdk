@@ -34,6 +34,17 @@ public class ParadexMarketAPIImpl extends ParadexBaseAPI implements ParadexMarke
     }
 
     @Override
+    public ParadexResultsResponseDTO<ParadexMarketDTO> getMarkets(String market) {
+        Map<String, String> queryParams = market != null ? Map.of("market", market) : null;
+
+        var response = httpClient.get(url + "/v1/markets", null, queryParams);
+
+        String body = processResponse(response);
+
+        return JsonUtils.deserialize(body, GetMarketTypeReference.INSTANCE);
+    }
+
+    @Override
     public ParadexResultsResponseDTO<ParadexMarketSummaryDTO> getMarketSummary(String market, Long start, Long end) {
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("market", market);
@@ -99,19 +110,23 @@ public class ParadexMarketAPIImpl extends ParadexBaseAPI implements ParadexMarke
     }
 
     private static class GetMarketBestBidOfferTypeReference extends TypeReference<ParadexMarketBestBidOfferDTO> {
-        public static final GetMarketBestBidOfferTypeReference INSTANCE = new GetMarketBestBidOfferTypeReference();
+        private static final GetMarketBestBidOfferTypeReference INSTANCE = new GetMarketBestBidOfferTypeReference();
+    }
+
+    private static class GetMarketTypeReference extends TypeReference<ParadexResultsResponseDTO<ParadexMarketDTO>> {
+        private static final GetMarketTypeReference INSTANCE = new GetMarketTypeReference();
     }
 
     private static class GetMarketSummaryTypeReference extends TypeReference<ParadexResultsResponseDTO<ParadexMarketSummaryDTO>> {
-        public static final GetMarketSummaryTypeReference INSTANCE = new GetMarketSummaryTypeReference();
+        private static final GetMarketSummaryTypeReference INSTANCE = new GetMarketSummaryTypeReference();
     }
 
     private static class GetOrderBookTypeReference extends TypeReference<ParadexOrderBookDTO> {
-        public static final GetOrderBookTypeReference INSTANCE = new GetOrderBookTypeReference();
+        private static final GetOrderBookTypeReference INSTANCE = new GetOrderBookTypeReference();
     }
 
     private static class GetFundingDataHistoryTypeReference extends TypeReference<ParadexPagedResultsResponseDTO<ParadexFundingDataDTO>> {
-        public static final GetFundingDataHistoryTypeReference INSTANCE = new GetFundingDataHistoryTypeReference();
+        private static final GetFundingDataHistoryTypeReference INSTANCE = new GetFundingDataHistoryTypeReference();
     }
 
 }
