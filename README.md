@@ -90,8 +90,8 @@ public class WebsocketExample {
 
         ParadexSubscriptionListener subscriptionListener = new ParadexSubscriptionListener() {
             @Override
-            public void onMessage(JsonNode data) {
-                System.out.println(data); // print data to console
+            public void onMessage(String channel, JsonNode data) {
+                System.out.println("Channel: " + channel + ", data: " + data); // print channel and data to console
             }
         };
         websocketClient.subscribe("markets_summary", subscriptionListener);

@@ -33,7 +33,9 @@ public class WsSubscribeAccountOrdersExample {
     private static class OrdersSubscriptionListener implements ParadexSubscriptionListener {
 
         @Override
-        public void onMessage(JsonNode data) {
+        public void onMessage(String channel, JsonNode data) {
+            System.out.println("Channel: " + channel);
+
             String rawJson = data.toString(); // to get raw json if needed
             System.out.println(rawJson);
 

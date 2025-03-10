@@ -15,12 +15,7 @@ public class WsSubscribeMarketSummaryExample {
 
         ParadexWebsocketClient websocketClient = new ParadexWebsocketClient(environment.getWsUrl() + "/v1", null, client);
 
-        ParadexSubscriptionListener subscriptionListener = new ParadexSubscriptionListener() {
-            @Override
-            public void onMessage(JsonNode data) {
-                System.out.println(data);
-            }
-        };
+        ParadexSubscriptionListener subscriptionListener = new MarketSummarySubscriptionListener();
         websocketClient.subscribe("markets_summary", subscriptionListener);
         websocketClient.connectBlocking();
 
@@ -32,10 +27,14 @@ public class WsSubscribeMarketSummaryExample {
     private static class MarketSummarySubscriptionListener implements ParadexSubscriptionListener {
 
         @Override
-        public void onMessage(JsonNode data) {
+        public void onMessage(String channel, JsonNode data) {
+            System.out.println("Channel: " + channel);
+
             String rawJson = data.toString(); // to get raw json if needed
+            System.out.println(rawJson);
 
             String symbol = data.get("symbol").asText(); // get some json field if needed
+            System.out.println(symbol);
 
             ParadexMarketSummaryDTO marketSummaryDTO = JsonUtils.treeToValue(data, ParadexMarketSummaryDTO.class); // deserialize to object
             System.out.println(marketSummaryDTO);

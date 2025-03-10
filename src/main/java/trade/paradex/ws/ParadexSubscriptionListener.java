@@ -4,6 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public interface ParadexSubscriptionListener {
 
-    void onMessage(JsonNode data);
+    void onMessage(String channel, JsonNode data);
 
 }

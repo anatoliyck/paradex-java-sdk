@@ -92,7 +92,7 @@ public class ParadexWebsocketClient extends WebSocketClient {
             ParadexSubscriptionListener listener = subscriptions.get(channel);
             if (listener != null) {
                 JsonNode dataNode = paramsNode.get("data");
-                listener.onMessage(dataNode);
+                listener.onMessage(channel, dataNode);
             } else {
                 log.error("Listener not found by channel: {}, message: {}", channel, message);
             }
