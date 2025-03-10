@@ -1,6 +1,9 @@
 import com.fasterxml.jackson.databind.JsonNode;
 import trade.paradex.ParadexClient;
+import trade.paradex.api.dto.OrderSide;
+import trade.paradex.api.dto.OrderType;
 import trade.paradex.api.dto.ParadexOrderDTO;
+import trade.paradex.api.dto.request.ParadexCreateOrderRequestDTO;
 import trade.paradex.model.ParadexAccount;
 import trade.paradex.model.ParadexEnvironment;
 import trade.paradex.utils.JsonUtils;
@@ -25,7 +28,18 @@ public class WsSubscribeAccountOrdersExample {
         websocketClient.subscribe("orders.ALL", subscriptionListener);
         websocketClient.connectBlocking();
 
-        Thread.sleep(10_000); // await 10 seconds
+        Thread.sleep(2000); // await 2 seconds
+
+        ParadexCreateOrderRequestDTO marketSellOrderRequest = ParadexCreateOrderRequestDTO.builder()
+                .market("BTC-USD-PERP")
+                .orderType(OrderType.MARKET)
+                .size(0.05)
+                .orderSide(OrderSide.SELL)
+                .build();
+        ParadexOrderDTO marketOrder = client.orderAPI().createOrder(account, marketSellOrderRequest);
+        System.out.println("Created order: " + marketOrder);
+
+        Thread.sleep(5000); // await 5 seconds
 
         websocketClient.shutdown(); // close ws connection and shutdown the client
     }
