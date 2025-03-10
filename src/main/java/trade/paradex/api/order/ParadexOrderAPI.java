@@ -1,9 +1,11 @@
 package trade.paradex.api.order;
 
+import trade.paradex.api.dto.ParadexModifyOrderDTO;
 import trade.paradex.api.dto.ParadexOrderDTO;
 import trade.paradex.api.dto.ParadexPagedResultsResponseDTO;
 import trade.paradex.api.dto.ParadexResultsResponseDTO;
 import trade.paradex.api.dto.request.ParadexCreateOrderRequestDTO;
+import trade.paradex.api.dto.request.ParadexModifyOrderRequestDTO;
 import trade.paradex.api.dto.request.ParadexOrdersHistoryRequestDTO;
 import trade.paradex.model.ParadexAccount;
 
@@ -53,6 +55,15 @@ public interface ParadexOrderAPI {
      * @return returns a new {@link ParadexOrderDTO}.
      */
     ParadexOrderDTO createOrder(ParadexAccount account, ParadexCreateOrderRequestDTO order);
+
+    /**
+     * Modify an existing open order by changing its price and/or size. The modified order maintains its original order ID.
+     *
+     * @param account     {@link ParadexAccount}
+     * @param modifyOrder {@link ParadexModifyOrderRequestDTO}
+     * @return {@link ParadexModifyOrderDTO}
+     */
+    ParadexModifyOrderDTO modifyOrder(ParadexAccount account, ParadexModifyOrderRequestDTO modifyOrder);
 
     /**
      * Cancel all open orders for specific market(if present), otherwise cancel all orders for all markets.

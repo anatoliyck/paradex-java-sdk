@@ -9,7 +9,7 @@ import trade.paradex.utils.JsonUtils;
 public abstract class ParadexBaseAPI {
 
     public String processResponse(HttpResponse response) {
-        if (response.getStatusCode() >= 400 && response.getStatusCode() <= 403) {
+        if (response.getStatusCode() >= 400) {
             ParadexErrorResponseDTO errorResponse = JsonUtils.deserialize(response.getBody(), ParadexErrorResponseTypeReference.INSTANCE);
             throw new ParadexAPIException(errorResponse.getError(), errorResponse.getMessage());
         }

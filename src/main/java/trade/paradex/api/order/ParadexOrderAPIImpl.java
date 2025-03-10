@@ -4,10 +4,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.RequiredArgsConstructor;
 import trade.paradex.api.ParadexBaseAPI;
 import trade.paradex.api.auth.ParadexAuthAPI;
+import trade.paradex.api.dto.ParadexModifyOrderDTO;
 import trade.paradex.api.dto.ParadexOrderDTO;
 import trade.paradex.api.dto.ParadexPagedResultsResponseDTO;
 import trade.paradex.api.dto.ParadexResultsResponseDTO;
 import trade.paradex.api.dto.request.ParadexCreateOrderRequestDTO;
+import trade.paradex.api.dto.request.ParadexModifyOrderRequestDTO;
 import trade.paradex.api.dto.request.ParadexOrdersHistoryRequestDTO;
 import trade.paradex.http.HttpClient;
 import trade.paradex.http.resolver.HttpClientResolver;
@@ -110,6 +112,22 @@ public class ParadexOrderAPIImpl extends ParadexBaseAPI implements ParadexOrderA
         String responseBody = processResponse(response);
 
         return JsonUtils.deserialize(responseBody, OrderTypeReference.INSTANCE);
+    }
+
+    @Override
+    public ParadexModifyOrderDTO modifyOrder(ParadexAccount account, ParadexModifyOrderRequestDTO modifyOrder) {
+        String jwtToken = authAPI.auth(account);
+
+        Map<String, String> headers = ParadexUtils.prepareHeaders(jwtToken);
+
+        HttpClient httpClient = httpClientResolver.resolve(account);
+        String body = JsonUtils.serialize(buildModifyOrderPayload(account, modifyOrder));
+        String fullUrl = url + "/v1/orders/" + URLEncoder.encode(modifyOrder.getId(), StandardCharsets.UTF_8);
+        var response = httpClient.put(fullUrl, headers, body);
+
+        String responseBody = processResponse(response);
+
+        return JsonUtils.deserialize(responseBody, ModifyOrderTypeReference.INSTANCE);
     }
 
     @Override
@@ -228,6 +246,31 @@ public class ParadexOrderAPIImpl extends ParadexBaseAPI implements ParadexOrderA
         return order;
     }
 
+    private Map<String, Object> buildModifyOrderPayload(ParadexAccount account, ParadexModifyOrderRequestDTO requestDTO) {
+        long now = System.currentTimeMillis();
+        Map<String, Object> payload = new HashMap<>();
+
+        payload.put("id", requestDTO.getId());
+        payload.put("market", requestDTO.getMarket());
+        payload.put("price", String.valueOf(requestDTO.getPrice()));
+        payload.put("side", requestDTO.getOrderSide());
+        payload.put("size", String.valueOf(requestDTO.getSize()));
+        payload.put("type", requestDTO.getOrderType());
+
+        var message = buildModifyOrderMessage(chainId, now,
+                requestDTO.getId(),
+                requestDTO.getMarket(),
+                requestDTO.getOrderSide().name(),
+                requestDTO.getOrderType().name(),
+                BigDecimal.valueOf(requestDTO.getSize()),
+                BigDecimal.valueOf(requestDTO.getPrice())
+        );
+        var pair = ParadexUtils.getSignature(account, message);
+        payload.put("signature_timestamp", now);
+        payload.put("signature", pair.getLeft());
+        return payload;
+    }
+
     private String buildOrderMessage(
             String chainId,
             long timestamp,
@@ -238,7 +281,7 @@ public class ParadexOrderAPIImpl extends ParadexBaseAPI implements ParadexOrderA
             BigDecimal price
     ) {
         var chainSide = Objects.equals(side, "BUY") ? "1" : "2";
-        var chain_Price = Objects.equals(orderType, "MARKET") ? "0" : price.scaleByPowerOfTen(8).toBigInteger().toString();
+        var chainPrice = Objects.equals(orderType, "MARKET") ? "0" : price.scaleByPowerOfTen(8).toBigInteger().toString();
         var chainSize = size.scaleByPowerOfTen(8).toBigInteger().toString();
 
         return String.format("{\n" +
@@ -298,18 +341,101 @@ public class ParadexOrderAPIImpl extends ParadexBaseAPI implements ParadexOrderA
                 "      }\n" +
                 "    ]\n" +
                 "  }\n" +
-                "}", timestamp, market, chainSide, orderType, chainSize, chain_Price, chainId);
+                "}", timestamp, market, chainSide, orderType, chainSize, chainPrice, chainId);
+    }
+
+    private String buildModifyOrderMessage(
+            String chainId,
+            long timestamp,
+            String orderId,
+            String market,
+            String side,
+            String orderType,
+            BigDecimal size,
+            BigDecimal price
+    ) {
+        var chainSide = Objects.equals(side, "BUY") ? "1" : "2";
+        var chainPrice = price.scaleByPowerOfTen(8).toBigInteger().toString();
+        var chainSize = size.scaleByPowerOfTen(8).toBigInteger().toString();
+
+        return String.format("{\n" +
+                "  \"message\": {\n" +
+                "    \"timestamp\": %d,\n" +
+                "    \"market\": \"%s\",\n" +
+                "    \"side\": %s,\n" +
+                "    \"orderType\": \"%s\",\n" +
+                "    \"size\": \"%s\",\n" +
+                "    \"price\": %s,\n" +
+                "    \"id\": \"%s\"\n" +
+                "  },\n" +
+                "  \"domain\": {\n" +
+                "    \"name\": \"Paradex\",\n" +
+                "    \"chainId\": \"%s\",\n" +
+                "    \"version\": \"1\"\n" +
+                "  },\n" +
+                "  \"primaryType\": \"ModifyOrder\",\n" +
+                "  \"types\": {\n" +
+                "    \"StarkNetDomain\": [\n" +
+                "      {\n" +
+                "        \"name\": \"name\",\n" +
+                "        \"type\": \"felt\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"name\": \"chainId\",\n" +
+                "        \"type\": \"felt\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"name\": \"version\",\n" +
+                "        \"type\": \"felt\"\n" +
+                "      }\n" +
+                "    ],\n" +
+                "    \"ModifyOrder\": [\n" +
+                "      {\n" +
+                "        \"name\": \"timestamp\",\n" +
+                "        \"type\": \"felt\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"name\": \"market\",\n" +
+                "        \"type\": \"felt\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"name\": \"side\",\n" +
+                "        \"type\": \"felt\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"name\": \"orderType\",\n" +
+                "        \"type\": \"felt\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"name\": \"size\",\n" +
+                "        \"type\": \"felt\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"name\": \"price\",\n" +
+                "        \"type\": \"felt\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"name\": \"id\",\n" +
+                "        \"type\": \"felt\"\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  }\n" +
+                "}", timestamp, market, chainSide, orderType, chainSize, chainPrice, orderId, chainId);
     }
 
     private static class GetOrdersTypeReference extends TypeReference<ParadexResultsResponseDTO<ParadexOrderDTO>> {
-        public static final GetOrdersTypeReference INSTANCE = new GetOrdersTypeReference();
+        private static final GetOrdersTypeReference INSTANCE = new GetOrdersTypeReference();
     }
 
     private static class GetOrdersHistoryTypeReference extends TypeReference<ParadexPagedResultsResponseDTO<ParadexOrderDTO>> {
-        public static final GetOrdersHistoryTypeReference INSTANCE = new GetOrdersHistoryTypeReference();
+        private static final GetOrdersHistoryTypeReference INSTANCE = new GetOrdersHistoryTypeReference();
     }
 
     private static class OrderTypeReference extends TypeReference<ParadexOrderDTO> {
-        public static final OrderTypeReference INSTANCE = new OrderTypeReference();
+        private static final OrderTypeReference INSTANCE = new OrderTypeReference();
+    }
+
+    private static class ModifyOrderTypeReference extends TypeReference<ParadexModifyOrderDTO> {
+        private static final ModifyOrderTypeReference INSTANCE = new ModifyOrderTypeReference();
     }
 }
