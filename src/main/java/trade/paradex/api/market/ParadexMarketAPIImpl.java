@@ -34,6 +34,25 @@ public class ParadexMarketAPIImpl extends ParadexBaseAPI implements ParadexMarke
     }
 
     @Override
+    public ParadexResultsResponseDTO<ParadexMarketKlineDTO> getMarketKlines(String market, int resolution,
+                                                                            long startAt, long endAt, String priceKind) {
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("symbol", market);
+        queryParams.put("resolution", String.valueOf(resolution));
+        queryParams.put("start_at", String.valueOf(startAt));
+        queryParams.put("end_at", String.valueOf(endAt));
+        if (priceKind != null) {
+            queryParams.put("price_kind", priceKind);
+        }
+
+        var response = httpClient.get(url + "/v1/markets/klines", null, queryParams);
+
+        String body = processResponse(response);
+
+        return JsonUtils.deserialize(body, GetMarketKlinesTypeReference.INSTANCE);
+    }
+
+    @Override
     public ParadexResultsResponseDTO<ParadexMarketDTO> getMarkets(String market) {
         Map<String, String> queryParams = market != null ? Map.of("market", market) : null;
 
@@ -111,6 +130,10 @@ public class ParadexMarketAPIImpl extends ParadexBaseAPI implements ParadexMarke
 
     private static class GetMarketBestBidOfferTypeReference extends TypeReference<ParadexMarketBestBidOfferDTO> {
         private static final GetMarketBestBidOfferTypeReference INSTANCE = new GetMarketBestBidOfferTypeReference();
+    }
+
+    private static class GetMarketKlinesTypeReference extends TypeReference<ParadexResultsResponseDTO<ParadexMarketKlineDTO>> {
+        private static final GetMarketKlinesTypeReference INSTANCE = new GetMarketKlinesTypeReference();
     }
 
     private static class GetMarketTypeReference extends TypeReference<ParadexResultsResponseDTO<ParadexMarketDTO>> {

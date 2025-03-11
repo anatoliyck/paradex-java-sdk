@@ -14,6 +14,18 @@ public interface ParadexMarketAPI {
     ParadexMarketBestBidOfferDTO getMarketBBO(String market);
 
     /**
+     * Get OHLCV(klines) aggregated data for given market.
+     *
+     * @param market     specific market(e.g. BTC-USD-PERP)
+     * @param resolution klines resolution in minutes: 1, 3, 5, 15, 30, 60
+     * @param startAt    start timestamp
+     * @param endAt      end timestamp
+     * @param priceKind  one of [last, mark]. Optional
+     */
+    ParadexResultsResponseDTO<ParadexMarketKlineDTO> getMarketKlines(String market, int resolution,
+                                                                     long startAt, long endAt, String priceKind);
+
+    /**
      * Get markets static data component.
      *
      * @param market specific market(e.g. BTC-USD-PERP). Optional
