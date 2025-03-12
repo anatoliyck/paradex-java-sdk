@@ -86,7 +86,7 @@ public class WebsocketExample {
         ParadexClient client = ParadexClient.builder(environment)
                 .build();
 
-        ParadexWebsocketClient websocketClient = new ParadexWebsocketClient(environment.getWsUrl() + "/v1", null, client);
+        ParadexWebsocketClient websocketClient = new ParadexWebsocketClient(environment.getWsUrl() + "/v1", client);
 
         ParadexSubscriptionListener subscriptionListener = new ParadexSubscriptionListener() {
             @Override

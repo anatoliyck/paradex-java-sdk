@@ -44,12 +44,31 @@ public class ParadexWebsocketClient extends WebSocketClient {
 
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
+    /**
+     * Using a websocket client only for public channels.
+     * Subscription to private channel will cause errors.
+     *
+     * @param wsUrl         paradex ws url
+     * @param paradexClient {@link ParadexClient}
+     */
+    public ParadexWebsocketClient(String wsUrl, ParadexClient paradexClient) {
+        this(wsUrl, null, paradexClient);
+    }
+
+    /**
+     * Using a websocket client for private/public subscriptions.
+     * if {@link ParadexAccount} is {@literal null} then acceptable only subscription to public channels.
+     *
+     * @param wsUrl         paradex ws url
+     * @param account       {@link ParadexAccount}. Optional
+     * @param paradexClient {@link ParadexClient}
+     */
     public ParadexWebsocketClient(String wsUrl,
                                   ParadexAccount account,
                                   ParadexClient paradexClient) {
         super(URI.create(wsUrl));
         this.account = account;
-        this.paradexClient = paradexClient;
+        this.paradexClient = Objects.requireNonNull(paradexClient, "paradexClient is null");
     }
 
     @Override
