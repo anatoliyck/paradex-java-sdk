@@ -1,18 +1,23 @@
 package trade.paradex.api.account;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import trade.paradex.api.ParadexBaseAPI;
 import trade.paradex.api.auth.ParadexAuthAPI;
 import trade.paradex.api.dto.*;
 import trade.paradex.api.dto.request.ParadexOrdersFillRequestDTO;
+import trade.paradex.api.dto.request.ParadexUpdateAccountMarginDTO;
 import trade.paradex.http.HttpClient;
 import trade.paradex.http.resolver.HttpClientResolver;
 import trade.paradex.model.ParadexAccount;
 import trade.paradex.utils.JsonUtils;
 import trade.paradex.utils.ParadexUtils;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -34,7 +39,51 @@ public class ParadexAccountAPIImpl extends ParadexBaseAPI implements ParadexAcco
 
         String body = processResponse(response);
 
-        return JsonUtils.deserialize(body, AccountInfoTypeReference.INSTANCE);
+        return JsonUtils.deserialize(body, GetAccountInfoTypeReference.INSTANCE);
+    }
+
+    @Override
+    public ParadexAccountMarginDTO getAccountMargin(ParadexAccount account, String market) {
+        if (market == null || market.isEmpty()) {
+            throw new IllegalArgumentException("market cannot be null or empty");
+        }
+
+        String jwtToken = authAPI.auth(account);
+
+        Map<String, String> headers = ParadexUtils.prepareHeaders(jwtToken);
+        Map<String, String> queryParams = Map.of("market", market);
+
+        HttpClient httpClient = httpClientResolver.resolve(account);
+        var response = httpClient.get(url + "/v1/account/margin", headers, queryParams);
+
+        String body = processResponse(response);
+
+        return JsonUtils.deserialize(body, GetAccountMarginTypeReference.INSTANCE);
+    }
+
+    @Override
+    public ParadexAccountMarginDTO updateAccountMargin(ParadexAccount account, ParadexUpdateAccountMarginDTO requestDTO) {
+        if (requestDTO == null) {
+            throw new IllegalArgumentException("requestDTO cannot be null");
+        }
+
+        if (requestDTO.getMarket() == null || requestDTO.getMarket().isEmpty()) {
+            throw new IllegalArgumentException("market cannot be null or empty");
+        }
+
+        String jwtToken = authAPI.auth(account);
+
+        Map<String, String> headers = ParadexUtils.prepareHeaders(jwtToken);
+
+        HttpClient httpClient = httpClientResolver.resolve(account);
+        String fullUrl = url + "/v1/account/margin/" + URLEncoder.encode(requestDTO.getMarket(), StandardCharsets.UTF_8);
+
+        String requestBody = prepareBody(requestDTO);
+        var response = httpClient.post(fullUrl, headers, requestBody);
+
+        String responseBody = processResponse(response);
+
+        return deserializeUpdateMarginBody(responseBody);
     }
 
     @Override
@@ -99,19 +148,46 @@ public class ParadexAccountAPIImpl extends ParadexBaseAPI implements ParadexAcco
         return queryParams;
     }
 
-    private static class AccountInfoTypeReference extends TypeReference<ParadexAccountInfoDTO> {
-        public static final AccountInfoTypeReference INSTANCE = new AccountInfoTypeReference();
+    private ParadexAccountMarginDTO deserializeUpdateMarginBody(String body) {
+        JsonNode node = JsonUtils.readTree(body);
+
+        ParadexAccountMarginDTO.MarginConfigDTO config = ParadexAccountMarginDTO.MarginConfigDTO.builder()
+                .market(node.get("market").asText())
+                .leverage(node.get("leverage").asInt())
+                .marginType(MarginType.valueOf(node.get("margin_type").asText()))
+                .build();
+        return ParadexAccountMarginDTO.builder()
+                .account(node.get("account").asText())
+                .configs(List.of(config))
+                .build();
+    }
+
+    private String prepareBody(ParadexUpdateAccountMarginDTO requestDTO) {
+        var data = Map.of(
+                "leverage", requestDTO.getLeverage(),
+                "margin_type", requestDTO.getMarginType()
+        );
+
+        return JsonUtils.serialize(data);
+    }
+
+    private static class GetAccountInfoTypeReference extends TypeReference<ParadexAccountInfoDTO> {
+        private static final GetAccountInfoTypeReference INSTANCE = new GetAccountInfoTypeReference();
+    }
+
+    private static class GetAccountMarginTypeReference extends TypeReference<ParadexAccountMarginDTO> {
+        private static final GetAccountMarginTypeReference INSTANCE = new GetAccountMarginTypeReference();
     }
 
     private static class GetBalancesTypeReference extends TypeReference<ParadexResultsResponseDTO<ParadexBalanceDTO>> {
-        public static final GetBalancesTypeReference INSTANCE = new GetBalancesTypeReference();
+        private static final GetBalancesTypeReference INSTANCE = new GetBalancesTypeReference();
     }
 
     private static class GetPositionsTypeReference extends TypeReference<ParadexResultsResponseDTO<ParadexPositionDTO>> {
-        public static final GetPositionsTypeReference INSTANCE = new GetPositionsTypeReference();
+        private static final GetPositionsTypeReference INSTANCE = new GetPositionsTypeReference();
     }
 
     private static class GetOrdersFillTypeReference extends TypeReference<ParadexPagedResultsResponseDTO<ParadexOrderFillDTO>> {
-        public static final GetOrdersFillTypeReference INSTANCE = new GetOrdersFillTypeReference();
+        private static final GetOrdersFillTypeReference INSTANCE = new GetOrdersFillTypeReference();
     }
 }

@@ -2,6 +2,7 @@ package trade.paradex.api.account;
 
 import trade.paradex.api.dto.*;
 import trade.paradex.api.dto.request.ParadexOrdersFillRequestDTO;
+import trade.paradex.api.dto.request.ParadexUpdateAccountMarginDTO;
 import trade.paradex.model.ParadexAccount;
 
 public interface ParadexAccountAPI {
@@ -15,6 +16,24 @@ public interface ParadexAccountAPI {
      * @return {@link ParadexAccountInfoDTO}
      */
     ParadexAccountInfoDTO getAccountInfo(ParadexAccount account, String subAccountAddress);
+
+    /**
+     * Get margin configuration for an account and market.
+     *
+     * @param account {@link ParadexAccount}
+     * @param market  market(e.g. BTC-USD-PERP)
+     * @return {@link ParadexAccountMarginDTO}
+     */
+    ParadexAccountMarginDTO getAccountMargin(ParadexAccount account, String market);
+
+    /**
+     * Set margin configuration for an account and market.
+     *
+     * @param account    {@link ParadexAccount}
+     * @param requestDTO {@link ParadexUpdateAccountMarginDTO}
+     * @return {@link ParadexAccountMarginDTO}
+     */
+    ParadexAccountMarginDTO updateAccountMargin(ParadexAccount account, ParadexUpdateAccountMarginDTO requestDTO);
 
     /**
      * Get account balances

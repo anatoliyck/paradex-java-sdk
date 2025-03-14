@@ -6,9 +6,15 @@ import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 import org.mockserver.verify.VerificationTimes;
 import trade.paradex.BaseIntegrationTest;
+import trade.paradex.api.dto.MarginType;
 import trade.paradex.api.dto.ParadexAccountInfoDTO;
+import trade.paradex.api.dto.ParadexAccountMarginDTO;
+import trade.paradex.api.dto.request.ParadexUpdateAccountMarginDTO;
 import trade.paradex.utils.JsonUtils;
 import trade.paradex.utils.Pair;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -30,6 +36,7 @@ public class AccountAPIIntegrationTest extends BaseIntegrationTest {
                 .build();
 
         HttpRequest httpRequest = HttpRequest.request()
+                .withHeader("Authorization", "Bearer " + mockAuthData.getRight())
                 .withMethod("GET")
                 .withPath("/v1/account");
         MOCK_SERVER_CLIENT.when(httpRequest)
@@ -43,12 +50,7 @@ public class AccountAPIIntegrationTest extends BaseIntegrationTest {
         assertEquals(expectedAccountInfo, accountInfo);
 
         MOCK_SERVER_CLIENT.verify(mockAuthData.getLeft(), VerificationTimes.once());
-
-        HttpRequest[] httpRequests = MOCK_SERVER_CLIENT.retrieveRecordedRequests(httpRequest);
-        assertEquals(1, httpRequests.length);
-
-        HttpRequest recordedRequest = httpRequests[0];
-        assertEquals("Bearer " + mockAuthData.getRight(), recordedRequest.getFirstHeader("Authorization"));
+        MOCK_SERVER_CLIENT.verify(httpRequest, VerificationTimes.once());
     }
 
     @Test
@@ -64,6 +66,7 @@ public class AccountAPIIntegrationTest extends BaseIntegrationTest {
                 .build();
 
         HttpRequest httpRequest = HttpRequest.request()
+                .withHeader("Authorization", "Bearer " + mockAuthData.getRight())
                 .withMethod("GET")
                 .withPath("/v1/account")
                 .withQueryStringParameter("subaccount_address", subAccountAddr);
@@ -78,12 +81,94 @@ public class AccountAPIIntegrationTest extends BaseIntegrationTest {
         assertEquals(expectedAccountInfo, accountInfo);
 
         MOCK_SERVER_CLIENT.verify(mockAuthData.getLeft(), VerificationTimes.once());
+        MOCK_SERVER_CLIENT.verify(httpRequest, VerificationTimes.once());
+    }
 
-        HttpRequest[] httpRequests = MOCK_SERVER_CLIENT.retrieveRecordedRequests(httpRequest);
-        assertEquals(1, httpRequests.length);
+    @Test
+    @DisplayName("Call `/v1/account/margin` to get margin info")
+    public void testCallGetAccountMargin() {
+        Pair<HttpRequest, String> mockAuthData = mockAuthAPI();
 
-        HttpRequest recordedRequest = httpRequests[0];
-        assertEquals("Bearer " + mockAuthData.getRight(), recordedRequest.getFirstHeader("Authorization"));
-        assertEquals(subAccountAddr, recordedRequest.getFirstQueryStringParameter("subaccount_address"));
+        String market = "ETH-USD-PERP";
+        ParadexAccountMarginDTO expectedAccountMargin = ParadexAccountMarginDTO.builder()
+                .account(PARADEX_TEST_ACCOUNT.getAddress())
+                .configs(List.of(
+                        ParadexAccountMarginDTO.MarginConfigDTO.builder()
+                                .market(market)
+                                .leverage(15)
+                                .marginType(MarginType.CROSS)
+                                .build())
+                )
+                .build();
+
+        HttpRequest httpRequest = HttpRequest.request()
+                .withHeader("Authorization", "Bearer " + mockAuthData.getRight())
+                .withMethod("GET")
+                .withPath("/v1/account/margin")
+                .withQueryStringParameter("market", market);
+        MOCK_SERVER_CLIENT.when(httpRequest)
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(200)
+                                .withBody(JsonUtils.serialize(expectedAccountMargin))
+                );
+
+        ParadexAccountMarginDTO accountMargin = PARADEX_CLIENT.accountAPI().getAccountMargin(PARADEX_TEST_ACCOUNT, market);
+        assertEquals(expectedAccountMargin, accountMargin);
+
+        MOCK_SERVER_CLIENT.verify(mockAuthData.getLeft(), VerificationTimes.once());
+        MOCK_SERVER_CLIENT.verify(httpRequest, VerificationTimes.once());
+    }
+
+    @Test
+    @DisplayName("Call `/v1/account/margin/{market}` to update margin")
+    public void testCallUpdateAccountMargin() {
+        Pair<HttpRequest, String> mockAuthData = mockAuthAPI();
+
+        String market = "ETH-USD-PERP";
+        ParadexAccountMarginDTO expectedAccountMargin = ParadexAccountMarginDTO.builder()
+                .account(PARADEX_TEST_ACCOUNT.getAddress())
+                .configs(List.of(
+                        ParadexAccountMarginDTO.MarginConfigDTO.builder()
+                                .market(market)
+                                .leverage(17)
+                                .marginType(MarginType.CROSS)
+                                .build())
+                )
+                .build();
+
+        var expectedRequestData = Map.of(
+                "leverage", 17,
+                "margin_type", MarginType.CROSS
+        );
+        var mockResponseData = Map.of(
+                "account", PARADEX_TEST_ACCOUNT.getAddress(),
+                "leverage", 17,
+                "market", market,
+                "margin_type", MarginType.CROSS
+        );
+
+        HttpRequest httpRequest = HttpRequest.request()
+                .withHeader("Authorization", "Bearer " + mockAuthData.getRight())
+                .withMethod("POST")
+                .withPath("/v1/account/margin/ETH-USD-PERP")
+                .withBody(JsonUtils.serialize(expectedRequestData));
+        MOCK_SERVER_CLIENT.when(httpRequest)
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(200)
+                                .withBody(JsonUtils.serialize(mockResponseData))
+                );
+
+        ParadexUpdateAccountMarginDTO updateAccountMarginRequest = ParadexUpdateAccountMarginDTO.builder()
+                .market(market)
+                .leverage(17)
+                .marginType(MarginType.CROSS)
+                .build();
+        ParadexAccountMarginDTO accountMargin = PARADEX_CLIENT.accountAPI().updateAccountMargin(PARADEX_TEST_ACCOUNT, updateAccountMarginRequest);
+        assertEquals(expectedAccountMargin, accountMargin);
+
+        MOCK_SERVER_CLIENT.verify(mockAuthData.getLeft(), VerificationTimes.once());
+        MOCK_SERVER_CLIENT.verify(httpRequest, VerificationTimes.once());
     }
 }
