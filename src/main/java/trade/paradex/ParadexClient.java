@@ -20,6 +20,7 @@ import trade.paradex.http.DefaultHttpClient;
 import trade.paradex.http.HttpClient;
 import trade.paradex.http.resolver.HttpClientResolver;
 import trade.paradex.http.resolver.StaticHttpClientResolver;
+import trade.paradex.model.ParadexAccount;
 import trade.paradex.model.ParadexEnvironment;
 
 import java.util.Objects;
@@ -57,16 +58,37 @@ public class ParadexClient {
         private HttpClient httpClient = DEFAULT_CLIENT;
         private HttpClientResolver httpClientResolver;
 
+        /**
+         * Configure whether to use a cached JWT token or not.
+         * By default, uses {@link CacheableParadexAuthAPI} that cache JWT token for each {@link ParadexAccount}.
+         *
+         * @param useCacheableJWT flag to cache JWT token or not.
+         * @return returns current {@link ParadexClientBuilder}
+         */
         public ParadexClientBuilder useCacheableJWT(boolean useCacheableJWT) {
             this.useCacheableJWT = useCacheableJWT;
             return this;
         }
 
+        /**
+         * Configure a custom {@link HttpClient} to use for private/public API calls.
+         *
+         * @param httpClient {@link HttpClient}
+         * @return returns current {@link ParadexClientBuilder}
+         */
         public ParadexClientBuilder httpClient(HttpClient httpClient) {
             this.httpClient = Objects.requireNonNull(httpClient, "httpClient cannot be null");
             return this;
         }
 
+        /**
+         * Configure a custom {@link HttpClientResolver} for resolving {@link HttpClient} for particular {@link ParadexAccount}.
+         * For example to use proxied http client for some {@link ParadexAccount} etc.
+         * By default uses {@link StaticHttpClientResolver} with given {@link ParadexClientBuilder#httpClient}.
+         *
+         * @param httpClientResolver {@link HttpClientResolver}
+         * @return returns current {@link ParadexClientBuilder}
+         */
         public ParadexClientBuilder httpClientResolver(HttpClientResolver httpClientResolver) {
             this.httpClientResolver = Objects.requireNonNull(httpClientResolver, "httpClientResolver cannot be null");
             return this;
