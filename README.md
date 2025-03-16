@@ -7,12 +7,15 @@ See [Paradex API Reference](https://docs.paradex.trade/api-reference/general-inf
 ## Installation
 
 ### Building From Source
+
 Build jar with following command
+
 ```shell
 mvn clean install
 ```
 
 ### Maven Repository
+
 TODO...
 
 ## Usage Examples
@@ -20,6 +23,7 @@ TODO...
 See more complex [examples](examples). You can also checkout the repo and run any of the [examples](examples).
 
 ### API
+
 ```java
 import trade.paradex.ParadexClient;
 import trade.paradex.api.dto.*;
@@ -70,6 +74,7 @@ public class Example {
 ```
 
 ### Websocket
+
 ```java
 import com.fasterxml.jackson.databind.JsonNode;
 import trade.paradex.ParadexClient;
@@ -104,12 +109,13 @@ public class WebsocketExample {
 }
 ```
 
-## Supported API 
+## Supported API
 
-| List of implemented API                                                                     |
-|---------------------------------------------------------------------------------------------|
-| [Account API](src%2Fmain%2Fjava%2Ftrade%2Fparadex%2Fapi%2Faccount%2FParadexAccountAPI.java) | 
-| [Auth API](src%2Fmain%2Fjava%2Ftrade%2Fparadex%2Fapi%2Fauth%2FParadexAuthAPI.java)          |
-| [Market API](src%2Fmain%2Fjava%2Ftrade%2Fparadex%2Fapi%2Fmarket%2FParadexMarketAPI.java)    |
-| [Order API](src%2Fmain%2Fjava%2Ftrade%2Fparadex%2Fapi%2Forder%2FParadexOrderAPI.java)       |
-| [Vault API](src%2Fmain%2Fjava%2Ftrade%2Fparadex%2Fapi%2Fvault%2FParadexVaultAPI.java)       |
+| List of implemented API                                                                                  |
+|----------------------------------------------------------------------------------------------------------|
+| [Account API](src%2Fmain%2Fjava%2Ftrade%2Fparadex%2Fapi%2Faccount%2FParadexAccountAPI.java)              | 
+| [Auth API](src%2Fmain%2Fjava%2Ftrade%2Fparadex%2Fapi%2Fauth%2FParadexAuthAPI.java)                       |
+| [Market API](src%2Fmain%2Fjava%2Ftrade%2Fparadex%2Fapi%2Fmarket%2FParadexMarketAPI.java)                 |
+| [Liquidations API](src%2Fmain%2Fjava%2Ftrade%2Fparadex%2Fapi%2Fliquidation%2FParadexLiquidationAPI.java) |
+| [Order API](src%2Fmain%2Fjava%2Ftrade%2Fparadex%2Fapi%2Forder%2FParadexOrderAPI.java)                    |
+| [Vault API](src%2Fmain%2Fjava%2Ftrade%2Fparadex%2Fapi%2Fvault%2FParadexVaultAPI.java)                    |

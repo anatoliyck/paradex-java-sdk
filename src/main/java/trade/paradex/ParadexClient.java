@@ -10,6 +10,8 @@ import trade.paradex.api.account.ParadexAccountAPIImpl;
 import trade.paradex.api.auth.CacheableParadexAuthAPI;
 import trade.paradex.api.auth.ParadexAuthAPI;
 import trade.paradex.api.auth.ParadexAuthAPIImpl;
+import trade.paradex.api.liquidation.ParadexLiquidationAPI;
+import trade.paradex.api.liquidation.ParadexLiquidationAPIImpl;
 import trade.paradex.api.market.ParadexMarketAPI;
 import trade.paradex.api.market.ParadexMarketAPIImpl;
 import trade.paradex.api.order.ParadexOrderAPI;
@@ -33,6 +35,7 @@ public class ParadexClient {
     private final ParadexAuthAPI authAPI;
     private final ParadexAccountAPI accountAPI;
     private final ParadexMarketAPI marketAPI;
+    private final ParadexLiquidationAPI liquidationAPI;
     private final ParadexOrderAPI orderAPI;
     private final ParadexVaultAPI vaultAPI;
 
@@ -99,15 +102,16 @@ public class ParadexClient {
                     ? this.httpClientResolver
                     : new StaticHttpClientResolver(httpClient);
 
-            ParadexAuthAPIImpl authApi = useCacheableJWT
+            ParadexAuthAPI authApi = useCacheableJWT
                     ? new CacheableParadexAuthAPI(url, chainId, httpClientResolver)
                     : new ParadexAuthAPIImpl(url, chainId, httpClientResolver);
             ParadexAccountAPI accountApi = new ParadexAccountAPIImpl(url, authApi, httpClientResolver);
             ParadexMarketAPI marketApi = new ParadexMarketAPIImpl(url, httpClient);
+            ParadexLiquidationAPI liquidationApi = new ParadexLiquidationAPIImpl(url, authApi, httpClientResolver);
             ParadexOrderAPI orderApi = new ParadexOrderAPIImpl(url, chainId, authApi, httpClientResolver);
             ParadexVaultAPI vaultApi = new ParadexVaultAPIImpl(url, authApi, httpClient, httpClientResolver);
 
-            return new ParadexClient(authApi, accountApi, marketApi, orderApi, vaultApi);
+            return new ParadexClient(authApi, accountApi, marketApi, liquidationApi, orderApi, vaultApi);
         }
     }
 }
