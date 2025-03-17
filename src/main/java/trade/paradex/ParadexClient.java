@@ -16,6 +16,8 @@ import trade.paradex.api.market.ParadexMarketAPI;
 import trade.paradex.api.market.ParadexMarketAPIImpl;
 import trade.paradex.api.order.ParadexOrderAPI;
 import trade.paradex.api.order.ParadexOrderAPIImpl;
+import trade.paradex.api.system.ParadexSystemAPI;
+import trade.paradex.api.system.ParadexSystemAPIImpl;
 import trade.paradex.api.vault.ParadexVaultAPI;
 import trade.paradex.api.vault.ParadexVaultAPIImpl;
 import trade.paradex.http.DefaultHttpClient;
@@ -37,6 +39,7 @@ public class ParadexClient {
     private final ParadexMarketAPI marketAPI;
     private final ParadexLiquidationAPI liquidationAPI;
     private final ParadexOrderAPI orderAPI;
+    private final ParadexSystemAPI systemAPI;
     private final ParadexVaultAPI vaultAPI;
 
     public static ParadexClientBuilder builder(ParadexEnvironment environment) {
@@ -109,9 +112,10 @@ public class ParadexClient {
             ParadexMarketAPI marketApi = new ParadexMarketAPIImpl(url, httpClient);
             ParadexLiquidationAPI liquidationApi = new ParadexLiquidationAPIImpl(url, authApi, httpClientResolver);
             ParadexOrderAPI orderApi = new ParadexOrderAPIImpl(url, chainId, authApi, httpClientResolver);
+            ParadexSystemAPI systemApi = new ParadexSystemAPIImpl(url, httpClient);
             ParadexVaultAPI vaultApi = new ParadexVaultAPIImpl(url, authApi, httpClient, httpClientResolver);
 
-            return new ParadexClient(authApi, accountApi, marketApi, liquidationApi, orderApi, vaultApi);
+            return new ParadexClient(authApi, accountApi, marketApi, liquidationApi, orderApi, systemApi, vaultApi);
         }
     }
 }

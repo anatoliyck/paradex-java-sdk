@@ -78,7 +78,6 @@ public class Example {
 ```java
 import com.fasterxml.jackson.databind.JsonNode;
 import trade.paradex.ParadexClient;
-import trade.paradex.api.dto.ParadexMarketSummaryDTO;
 import trade.paradex.model.ParadexEnvironment;
 import trade.paradex.utils.JsonUtils;
 import trade.paradex.ws.ParadexSubscriptionListener;
@@ -118,4 +117,5 @@ public class WebsocketExample {
 | [Market API](src%2Fmain%2Fjava%2Ftrade%2Fparadex%2Fapi%2Fmarket%2FParadexMarketAPI.java)                 |
 | [Liquidations API](src%2Fmain%2Fjava%2Ftrade%2Fparadex%2Fapi%2Fliquidation%2FParadexLiquidationAPI.java) |
 | [Order API](src%2Fmain%2Fjava%2Ftrade%2Fparadex%2Fapi%2Forder%2FParadexOrderAPI.java)                    |
+| [System API](src%2Fmain%2Fjava%2Ftrade%2Fparadex%2Fapi%2Fsystem%2FParadexSystemAPI.java)                 |
 | [Vault API](src%2Fmain%2Fjava%2Ftrade%2Fparadex%2Fapi%2Fvault%2FParadexVaultAPI.java)                    |
