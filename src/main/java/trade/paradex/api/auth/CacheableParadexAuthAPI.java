@@ -42,7 +42,11 @@ public class CacheableParadexAuthAPI extends ParadexAuthAPIImpl {
         private final Instant expiresAt;
 
         public boolean isExpired() {
-            return Instant.now().minusSeconds(EXPIRE_TIME_GAP_SECONDS).isAfter(expiresAt);
+            if (expiresAt == null) {
+                return false;
+            }
+
+            return expiresAt.minusSeconds(EXPIRE_TIME_GAP_SECONDS).isBefore(Instant.now());
         }
 
         public static JwtTokenData of(String jwt) {
