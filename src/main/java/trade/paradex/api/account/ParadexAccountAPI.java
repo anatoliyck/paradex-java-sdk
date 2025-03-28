@@ -1,7 +1,7 @@
 package trade.paradex.api.account;
 
 import trade.paradex.api.dto.*;
-import trade.paradex.api.dto.request.ParadexOrdersFillRequestDTO;
+import trade.paradex.api.dto.request.ParadexHistoryRequestDTO;
 import trade.paradex.api.dto.request.ParadexUpdateAccountMarginDTO;
 import trade.paradex.model.ParadexAccount;
 
@@ -55,9 +55,19 @@ public interface ParadexAccountAPI {
      * Returns a list of matched orders (i.e. fills) that have been sent to chain for settlement.
      *
      * @param account    {@link ParadexAccount}
-     * @param requestDTO {@link ParadexOrdersFillRequestDTO}
+     * @param requestDTO {@link ParadexHistoryRequestDTO}
      * @return List of {@link ParadexOrderFillDTO}
      */
-    ParadexPagedResultsResponseDTO<ParadexOrderFillDTO> getOrdersFill(ParadexAccount account, ParadexOrdersFillRequestDTO requestDTO);
+    ParadexPagedResultsResponseDTO<ParadexOrderFillDTO> getOrdersFill(ParadexAccount account, ParadexHistoryRequestDTO requestDTO);
+
+    /**
+     * List funding payments made by/to the requester’s account.
+     * Funding payments are periodic payments between traders to make the perpetual futures contract price is close to the index price.
+     *
+     * @param account    {@link ParadexAccount}
+     * @param requestDTO {@link ParadexHistoryRequestDTO}
+     * @return List of {@link ParadexFundingPaymentDTO}
+     */
+    ParadexPagedResultsResponseDTO<ParadexFundingPaymentDTO> getFundingPaymentHistory(ParadexAccount account, ParadexHistoryRequestDTO requestDTO);
 
 }

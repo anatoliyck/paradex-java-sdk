@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.RequiredArgsConstructor;
 import trade.paradex.api.ParadexBaseAPI;
 import trade.paradex.api.dto.*;
-import trade.paradex.api.dto.request.ParadexFundingDataHistoryRequestDTO;
+import trade.paradex.api.dto.request.ParadexHistoryRequestDTO;
 import trade.paradex.http.HttpClient;
 import trade.paradex.utils.JsonUtils;
 
@@ -97,7 +97,7 @@ public class ParadexMarketAPIImpl extends ParadexBaseAPI implements ParadexMarke
     }
 
     @Override
-    public ParadexPagedResultsResponseDTO<ParadexFundingDataDTO> getFundingDataHistory(ParadexFundingDataHistoryRequestDTO requestDTO) {
+    public ParadexPagedResultsResponseDTO<ParadexFundingDataDTO> getFundingDataHistory(ParadexHistoryRequestDTO requestDTO) {
         if (requestDTO.getMarket() == null) {
             throw new IllegalArgumentException("market cannot be null");
         }
@@ -109,7 +109,7 @@ public class ParadexMarketAPIImpl extends ParadexBaseAPI implements ParadexMarke
         return JsonUtils.deserialize(body, GetFundingDataHistoryTypeReference.INSTANCE);
     }
 
-    private Map<String, String> prepareQueryParams(ParadexFundingDataHistoryRequestDTO requestDTO) {
+    private Map<String, String> prepareQueryParams(ParadexHistoryRequestDTO requestDTO) {
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("page_size", String.valueOf(requestDTO.getPageSize()));
         if (requestDTO.getCursor() != null) {

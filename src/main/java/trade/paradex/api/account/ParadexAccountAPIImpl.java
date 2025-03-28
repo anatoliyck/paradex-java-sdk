@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import trade.paradex.api.ParadexBaseAPI;
 import trade.paradex.api.auth.ParadexAuthAPI;
 import trade.paradex.api.dto.*;
-import trade.paradex.api.dto.request.ParadexOrdersFillRequestDTO;
+import trade.paradex.api.dto.request.ParadexHistoryRequestDTO;
 import trade.paradex.api.dto.request.ParadexUpdateAccountMarginDTO;
 import trade.paradex.http.HttpClient;
 import trade.paradex.http.resolver.HttpClientResolver;
@@ -115,7 +115,7 @@ public class ParadexAccountAPIImpl extends ParadexBaseAPI implements ParadexAcco
     }
 
     @Override
-    public ParadexPagedResultsResponseDTO<ParadexOrderFillDTO> getOrdersFill(ParadexAccount account, ParadexOrdersFillRequestDTO requestDTO) {
+    public ParadexPagedResultsResponseDTO<ParadexOrderFillDTO> getOrdersFill(ParadexAccount account, ParadexHistoryRequestDTO requestDTO) {
         String jwtToken = authAPI.auth(account);
 
         Map<String, String> headers = ParadexUtils.prepareHeaders(jwtToken);
@@ -129,7 +129,22 @@ public class ParadexAccountAPIImpl extends ParadexBaseAPI implements ParadexAcco
         return JsonUtils.deserialize(body, GetOrdersFillTypeReference.INSTANCE);
     }
 
-    private Map<String, String> prepareQueryParams(ParadexOrdersFillRequestDTO requestDTO) {
+    @Override
+    public ParadexPagedResultsResponseDTO<ParadexFundingPaymentDTO> getFundingPaymentHistory(ParadexAccount account, ParadexHistoryRequestDTO requestDTO) {
+        String jwtToken = authAPI.auth(account);
+
+        Map<String, String> headers = ParadexUtils.prepareHeaders(jwtToken);
+        Map<String, String> queryParams = prepareQueryParams(requestDTO);
+
+        HttpClient httpClient = httpClientResolver.resolve(account);
+        var response = httpClient.get(url + "/v1/funding/payments", headers, queryParams);
+
+        String body = processResponse(response);
+
+        return JsonUtils.deserialize(body, GetFundingPaymentHistoryTypeReference.INSTANCE);
+    }
+
+    private Map<String, String> prepareQueryParams(ParadexHistoryRequestDTO requestDTO) {
         Map<String, String> queryParams = new HashMap<>();
         if (requestDTO.getCursor() != null) {
             queryParams.put("cursor", requestDTO.getCursor());
@@ -189,5 +204,9 @@ public class ParadexAccountAPIImpl extends ParadexBaseAPI implements ParadexAcco
 
     private static class GetOrdersFillTypeReference extends TypeReference<ParadexPagedResultsResponseDTO<ParadexOrderFillDTO>> {
         private static final GetOrdersFillTypeReference INSTANCE = new GetOrdersFillTypeReference();
+    }
+
+    private static class GetFundingPaymentHistoryTypeReference extends TypeReference<ParadexPagedResultsResponseDTO<ParadexFundingPaymentDTO>> {
+        private static final GetFundingPaymentHistoryTypeReference INSTANCE = new GetFundingPaymentHistoryTypeReference();
     }
 }

@@ -1,7 +1,7 @@
 package trade.paradex.api.market;
 
 import trade.paradex.api.dto.*;
-import trade.paradex.api.dto.request.ParadexFundingDataHistoryRequestDTO;
+import trade.paradex.api.dto.request.ParadexHistoryRequestDTO;
 
 public interface ParadexMarketAPI {
 
@@ -55,8 +55,8 @@ public interface ParadexMarketAPI {
     /**
      * Returns list historical funding data by market.
      *
-     * @param requestDTO {@link ParadexFundingDataHistoryRequestDTO}
+     * @param requestDTO {@link ParadexHistoryRequestDTO}
      * @return List of {@link ParadexFundingDataDTO}
      */
-    ParadexPagedResultsResponseDTO<ParadexFundingDataDTO> getFundingDataHistory(ParadexFundingDataHistoryRequestDTO requestDTO);
+    ParadexPagedResultsResponseDTO<ParadexFundingDataDTO> getFundingDataHistory(ParadexHistoryRequestDTO requestDTO);
 }
