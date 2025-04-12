@@ -3,6 +3,8 @@ package trade.paradex.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class ParadexMarketDTO {
 
@@ -16,7 +18,7 @@ public class ParadexMarketDTO {
     private ChainDetailsDTO chainDetails;
 
     @JsonProperty("clamp_rate")
-    private double clampRate;
+    private BigDecimal clampRate;
 
     @JsonProperty("delta1_cross_margin_params")
     private CrossMarginParamsDTO delta1CrossMarginParams;
@@ -25,28 +27,28 @@ public class ParadexMarketDTO {
     private long expiryAt;
 
     @JsonProperty("interest_rate")
-    private double interestRate;
+    private BigDecimal interestRate;
 
     @JsonProperty("market_kind")
     private String marketKind;
 
     @JsonProperty("max_funding_rate")
-    private double maxFundingRate;
+    private BigDecimal maxFundingRate;
 
     @JsonProperty("max_funding_rate_change")
-    private double maxFundingRateChange;
+    private BigDecimal maxFundingRateChange;
 
     @JsonProperty("max_open_orders")
     private int maxOpenOrders;
 
     @JsonProperty("max_order_size")
-    private double maxOrderSize;
+    private BigDecimal maxOrderSize;
 
     @JsonProperty("max_tob_spread")
-    private double maxTobSpread;
+    private BigDecimal maxTobSpread;
 
     @JsonProperty("min_notional")
-    private double minNotional;
+    private BigDecimal minNotional;
 
     @JsonProperty("open_at")
     private long openAt;
@@ -58,22 +60,22 @@ public class ParadexMarketDTO {
     private String optionType;
 
     @JsonProperty("oracle_ewma_factor")
-    private double oracleEwmaFactor;
+    private BigDecimal oracleEwmaFactor;
 
     @JsonProperty("order_size_increment")
-    private double orderSizeIncrement;
+    private BigDecimal orderSizeIncrement;
 
     @JsonProperty("position_limit")
-    private int positionLimit;
+    private BigDecimal positionLimit;
 
     @JsonProperty("price_bands_width")
-    private double priceBandsWidth;
+    private BigDecimal priceBandsWidth;
 
     @JsonProperty("price_feed_id")
     private String priceFeedId;
 
     @JsonProperty("price_tick_size")
-    private double priceTickSize;
+    private BigDecimal priceTickSize;
 
     @JsonProperty("quote_currency")
     private String quoteCurrency;
@@ -82,7 +84,7 @@ public class ParadexMarketDTO {
     private String settlementCurrency;
 
     @JsonProperty("strike_price")
-    private double strikePrice;
+    private BigDecimal strikePrice;
 
     @JsonProperty("symbol")
     private String symbol;
@@ -100,16 +102,16 @@ public class ParadexMarketDTO {
         private String feeAccountAddress;
 
         @JsonProperty("fee_maker")
-        private double feeMaker;
+        private BigDecimal feeMaker;
 
         @JsonProperty("fee_taker")
-        private double feeTaker;
+        private BigDecimal feeTaker;
 
         @JsonProperty("insurance_fund_address")
         private String insuranceFundAddress;
 
         @JsonProperty("liquidation_fee")
-        private double liquidationFee;
+        private BigDecimal liquidationFee;
 
         @JsonProperty("oracle_address")
         private String oracleAddress;
@@ -123,16 +125,16 @@ public class ParadexMarketDTO {
     public static class CrossMarginParamsDTO {
 
         @JsonProperty("imf_base")
-        private double imfBase;
+        private BigDecimal imfBase;
 
         @JsonProperty("imf_factor")
-        private double imfFactor;
+        private BigDecimal imfFactor;
 
         @JsonProperty("imf_shift")
-        private double imfShift;
+        private BigDecimal imfShift;
 
         @JsonProperty("mmf_factor")
-        private double mmfFactor;
+        private BigDecimal mmfFactor;
 
     }
 
@@ -151,19 +153,19 @@ public class ParadexMarketDTO {
     public static class MarginFactorsDTO {
 
         @JsonProperty("long_itm")
-        private double longItm;
+        private BigDecimal longItm;
 
         @JsonProperty("premium_multiplier")
-        private double premiumMultiplier;
+        private BigDecimal premiumMultiplier;
 
         @JsonProperty("short_itm")
-        private double shortItm;
+        private BigDecimal shortItm;
 
         @JsonProperty("short_otm")
-        private double shortOtm;
+        private BigDecimal shortOtm;
 
         @JsonProperty("short_put_cap")
-        private double shortPutCap;
+        private BigDecimal shortPutCap;
 
     }
 }

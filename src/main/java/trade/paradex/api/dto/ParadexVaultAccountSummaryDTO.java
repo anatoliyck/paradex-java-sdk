@@ -3,6 +3,8 @@ package trade.paradex.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class ParadexVaultAccountSummaryDTO {
 
@@ -13,15 +15,15 @@ public class ParadexVaultAccountSummaryDTO {
     private long createdAt;
 
     @JsonProperty("deposited_amount")
-    private double depositedAmount;
+    private BigDecimal depositedAmount;
 
     @JsonProperty("total_pnl")
-    private double totalPnl;
+    private BigDecimal totalPnl;
 
     @JsonProperty("total_roi")
-    private double totalRoi;
+    private BigDecimal totalRoi;
 
     @JsonProperty("vtoken_amount")
-    private double vtokenAmount;
+    private BigDecimal vtokenAmount;
 
 }

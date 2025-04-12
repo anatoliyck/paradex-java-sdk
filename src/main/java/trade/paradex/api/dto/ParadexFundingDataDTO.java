@@ -3,6 +3,8 @@ package trade.paradex.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class ParadexFundingDataDTO {
 
@@ -10,13 +12,13 @@ public class ParadexFundingDataDTO {
     private long createdAt;
 
     @JsonProperty("funding_index")
-    private double fundingIndex;
+    private BigDecimal fundingIndex;
 
     @JsonProperty("funding_premium")
-    private double fundingPremium;
+    private BigDecimal fundingPremium;
 
     @JsonProperty("funding_rate")
-    private double fundingRate;
+    private BigDecimal fundingRate;
 
     @JsonProperty("market")
     private String market;

@@ -3,6 +3,7 @@ package trade.paradex.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -27,7 +28,7 @@ public class ParadexVaultDTO {
     private int lockupPeriod;
 
     @JsonProperty("max_tvl")
-    private long maxTvl;
+    private BigDecimal maxTvl;
 
     @JsonProperty("name")
     private String name;

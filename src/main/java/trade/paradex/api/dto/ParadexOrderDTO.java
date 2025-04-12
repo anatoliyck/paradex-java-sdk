@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -45,7 +46,7 @@ public class ParadexOrderDTO {
     private String market;
 
     @JsonProperty("price")
-    private double price;
+    private BigDecimal price;
 
     @JsonProperty("published_at")
     private Long publishedAt;
@@ -54,7 +55,7 @@ public class ParadexOrderDTO {
     private Long receivedAt;
 
     @JsonProperty("remaining_size")
-    private double remainingSize;
+    private BigDecimal remainingSize;
 
     @JsonProperty("seq_no")
     private long seqNo;
@@ -63,7 +64,7 @@ public class ParadexOrderDTO {
     private OrderSide side;
 
     @JsonProperty("size")
-    private double size;
+    private BigDecimal size;
 
     @JsonProperty("status")
     private String status;
@@ -75,7 +76,7 @@ public class ParadexOrderDTO {
     private long timestamp;
 
     @JsonProperty("trigger_price")
-    private Double triggerPrice;
+    private BigDecimal triggerPrice;
 
     @JsonProperty("type")
     private String type;

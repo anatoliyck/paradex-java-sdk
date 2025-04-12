@@ -13,6 +13,7 @@ import trade.paradex.api.dto.request.ParadexUpdateAccountMarginDTO;
 import trade.paradex.utils.JsonUtils;
 import trade.paradex.utils.Pair;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -27,12 +28,12 @@ public class AccountAPIIntegrationTest extends BaseIntegrationTest {
 
         ParadexAccountInfoDTO expectedAccountInfo = ParadexAccountInfoDTO.builder()
                 .account(PARADEX_TEST_ACCOUNT.getAddress())
-                .accountValue(1230.3205)
-                .freeCollateral(329.323)
+                .accountValue(BigDecimal.valueOf(1230.3205))
+                .freeCollateral(BigDecimal.valueOf(329.323))
                 .seqNo(481284821482822L)
-                .initialMarginRequirement(504)
+                .initialMarginRequirement(BigDecimal.valueOf(504))
                 .settlementAsset("USDC")
-                .totalCollateral(30502.39)
+                .totalCollateral(BigDecimal.valueOf(30502.39))
                 .build();
 
         HttpRequest httpRequest = HttpRequest.request()

@@ -3,6 +3,8 @@ package trade.paradex.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class ParadexVaultSummaryDTO {
 
@@ -10,72 +12,72 @@ public class ParadexVaultSummaryDTO {
     private String address;
 
     @JsonProperty("last_month_return")
-    private double lastMonthReturn;
+    private BigDecimal lastMonthReturn;
 
     @JsonProperty("max_drawdown")
-    private double maxDrawdown;
+    private BigDecimal maxDrawdown;
 
     @JsonProperty("max_drawdown_24h")
-    private double maxDrawdown24h;
+    private BigDecimal maxDrawdown24h;
 
     @JsonProperty("max_drawdown_30d")
-    private double maxDrawdown30d;
+    private BigDecimal maxDrawdown30d;
 
     @JsonProperty("max_drawdown_7d")
-    private double maxDrawdown7d;
+    private BigDecimal maxDrawdown7d;
 
     @JsonProperty("net_deposits")
-    private double netDeposits;
+    private BigDecimal netDeposits;
 
     @JsonProperty("num_depositors")
     private int numDepositors;
 
     @JsonProperty("owner_equity")
-    private double ownerEquity;
+    private BigDecimal ownerEquity;
 
     @JsonProperty("pnl_24h")
-    private double pnl24h;
+    private BigDecimal pnl24h;
 
     @JsonProperty("pnl_30d")
-    private double pnl30d;
+    private BigDecimal pnl30d;
 
     @JsonProperty("pnl_7d")
-    private double pnl7d;
+    private BigDecimal pnl7d;
 
     @JsonProperty("roi_24h")
-    private double roi24h;
+    private BigDecimal roi24h;
 
     @JsonProperty("roi_30d")
-    private double roi30d;
+    private BigDecimal roi30d;
 
     @JsonProperty("roi_7d")
-    private double roi7d;
+    private BigDecimal roi7d;
 
     @JsonProperty("total_pnl")
-    private double totalPnl;
+    private BigDecimal totalPnl;
 
     @JsonProperty("total_roi")
-    private double totalRoi;
+    private BigDecimal totalRoi;
 
     @JsonProperty("tvl")
-    private double tvl;
+    private BigDecimal tvl;
 
     @JsonProperty("volume")
-    private double volume;
+    private BigDecimal volume;
 
     @JsonProperty("volume_24h")
-    private double volume24h;
+    private BigDecimal volume24h;
 
     @JsonProperty("volume_30d")
-    private double volume30d;
+    private BigDecimal volume30d;
 
     @JsonProperty("volume_7d")
-    private double volume7d;
+    private BigDecimal volume7d;
 
     @JsonProperty("vtoken_price")
-    private double vtokenPrice;
+    private BigDecimal vtokenPrice;
 
     @JsonProperty("vtoken_supply")
-    private double vtokenSupply;
+    private BigDecimal vtokenSupply;
 
 }

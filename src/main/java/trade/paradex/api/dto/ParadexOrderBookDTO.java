@@ -36,8 +36,8 @@ public class ParadexOrderBookDTO {
 
     @Value
     public static class OrderDTO {
-        double price;
-        double size;
+        BigDecimal price;
+        BigDecimal size;
     }
 
     public static class OrderListDeserializer extends JsonDeserializer<List<OrderDTO>> {
@@ -48,7 +48,7 @@ public class ParadexOrderBookDTO {
             for (JsonNode arrayNode : node) {
                 BigDecimal price = new BigDecimal(arrayNode.get(0).asText());
                 BigDecimal size = new BigDecimal(arrayNode.get(1).asText());
-                orders.add(new OrderDTO(price.doubleValue(), size.doubleValue()));
+                orders.add(new OrderDTO(price, size));
             }
             return orders;
         }

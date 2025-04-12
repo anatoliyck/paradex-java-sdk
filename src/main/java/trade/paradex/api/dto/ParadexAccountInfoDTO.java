@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,19 +18,19 @@ public class ParadexAccountInfoDTO {
     private String account;
 
     @JsonProperty("account_value")
-    private double accountValue;
+    private BigDecimal accountValue;
 
     @JsonProperty("free_collateral")
-    private double freeCollateral;
+    private BigDecimal freeCollateral;
 
     @JsonProperty("initial_margin_requirement")
-    private double initialMarginRequirement;
+    private BigDecimal initialMarginRequirement;
 
     @JsonProperty("maintenance_margin_requirement")
-    private double maintenanceMarginRequirement;
+    private BigDecimal maintenanceMarginRequirement;
 
     @JsonProperty("margin_cushion")
-    private double marginCushion;
+    private BigDecimal marginCushion;
 
     @JsonProperty("seq_no")
     private long seqNo;
@@ -40,7 +42,7 @@ public class ParadexAccountInfoDTO {
     private String status;
 
     @JsonProperty("total_collateral")
-    private double totalCollateral;
+    private BigDecimal totalCollateral;
 
     @JsonProperty("updated_at")
     private long updatedAt;

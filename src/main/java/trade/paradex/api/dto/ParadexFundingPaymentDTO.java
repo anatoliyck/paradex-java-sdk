@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,6 +30,6 @@ public class ParadexFundingPaymentDTO {
     private String market;
 
     @JsonProperty("payment")
-    private double payment;
+    private BigDecimal payment;
 
 }

@@ -12,6 +12,7 @@ import trade.paradex.api.dto.ParadexOrderDTO;
 import trade.paradex.api.dto.ParadexResultsResponseDTO;
 import trade.paradex.utils.JsonUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class OrderAPIIntegrationTest extends BaseIntegrationTest {
@@ -25,11 +26,11 @@ public class OrderAPIIntegrationTest extends BaseIntegrationTest {
                 .account(PARADEX_TEST_ACCOUNT.getAddress())
                 .flags(List.of("POST_ONLY"))
                 .market("ETH-USD-PERP")
-                .price(1500.55)
+                .price(BigDecimal.valueOf(1500.55))
                 .type("LIMIT")
                 .side(OrderSide.BUY)
-                .size(1.58)
-                .remainingSize(0.23)
+                .size(BigDecimal.valueOf(1.58))
+                .remainingSize(BigDecimal.valueOf(0.23))
                 .publishedAt(239123912932931L)
                 .lastUpdatedAt(219312831283823L)
                 .build();

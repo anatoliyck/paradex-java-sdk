@@ -2,33 +2,37 @@ package trade.paradex.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.math.BigDecimal;
 
 @Data
+@EqualsAndHashCode(of = "id")
 public class ParadexPositionDTO {
 
     @JsonProperty("id")
     private String id;
 
     @JsonProperty("average_entry_price")
-    private Double averageEntryPrice;
+    private BigDecimal averageEntryPrice;
 
     @JsonProperty("average_entry_price_usd")
-    private Double averageEntryPriceUsd;
+    private BigDecimal averageEntryPriceUsd;
 
     @JsonProperty("average_exit_price")
-    private Double averageExitPrice;
+    private BigDecimal averageExitPrice;
 
     @JsonProperty("cached_funding_index")
-    private Double cachedFundingIndex;
+    private BigDecimal cachedFundingIndex;
 
     @JsonProperty("closed_at")
     private Long closedAt;
 
     @JsonProperty("cost")
-    private Double cost;
+    private BigDecimal cost;
 
     @JsonProperty("cost_usd")
-    private Double costUsd;
+    private BigDecimal costUsd;
 
     @JsonProperty("created_at")
     private long createdAt;
@@ -40,16 +44,16 @@ public class ParadexPositionDTO {
     private Long lastUpdatedAt;
 
     @JsonProperty("leverage")
-    private Double leverage;
+    private BigDecimal leverage;
 
     @JsonProperty("liquidation_price")
-    private Double liquidationPrice;
+    private BigDecimal liquidationPrice;
 
     @JsonProperty("market")
     private String market;
 
     @JsonProperty("realized_positional_pnl")
-    private String realizedPositionalPnl;
+    private BigDecimal realizedPositionalPnl;
 
     @JsonProperty("seq_no")
     private long seqNo;
@@ -58,18 +62,18 @@ public class ParadexPositionDTO {
     private PositionSide side;
 
     @JsonProperty("size")
-    private double size;
+    private BigDecimal size;
 
     @JsonProperty("status")
     private PositionStatus status;
 
     @JsonProperty("unrealized_funding_pnl")
-    private double unrealizedFundingPnl;
+    private BigDecimal unrealizedFundingPnl;
 
     @JsonProperty("unrealized_pnl")
-    private double unrealizedPnl;
+    private BigDecimal unrealizedPnl;
 
     @JsonProperty("realized_positional_funding_pnl")
-    private double realizedPositionalFundingPnl;
+    private BigDecimal realizedPositionalFundingPnl;
 
 }

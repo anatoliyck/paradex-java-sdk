@@ -28,7 +28,7 @@ public class LimitOrderExample {
         }
 
         ParadexMarketSummaryDTO btcMarketSummary = markets.get(0);
-        double currentPrice = btcMarketSummary.getMarkPrice();
+        double currentPrice = btcMarketSummary.getMarkPrice().doubleValue();
 
         double orderPrice = BigDecimal.valueOf(currentPrice)  // -5% from current price
                 .multiply(BigDecimal.valueOf(0.95))

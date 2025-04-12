@@ -3,6 +3,8 @@ package trade.paradex.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class ParadexBalanceDTO {
 
@@ -10,7 +12,7 @@ public class ParadexBalanceDTO {
     private String token;
 
     @JsonProperty("size")
-    private double amount;
+    private BigDecimal amount;
 
     @JsonProperty("last_updated_at")
     private long lastUpdatedAt;

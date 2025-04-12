@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Value;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import static trade.paradex.api.dto.ParadexMarketKlineDTO.KlineDeserializer;
 
@@ -16,11 +17,11 @@ import static trade.paradex.api.dto.ParadexMarketKlineDTO.KlineDeserializer;
 public class ParadexMarketKlineDTO {
 
     long timestamp;
-    double open;
-    double high;
-    double low;
-    double close;
-    double volume;
+    BigDecimal open;
+    BigDecimal high;
+    BigDecimal low;
+    BigDecimal close;
+    BigDecimal volume;
 
     public static class KlineDeserializer extends JsonDeserializer<ParadexMarketKlineDTO> {
         @Override
@@ -35,11 +36,11 @@ public class ParadexMarketKlineDTO {
             }
 
             long timestamp = node.get(0).longValue();
-            double open = node.get(1).doubleValue();
-            double high = node.get(2).doubleValue();
-            double low = node.get(3).doubleValue();
-            double close = node.get(4).doubleValue();
-            double volume = node.get(5).doubleValue();
+            BigDecimal open = node.get(1).decimalValue();
+            BigDecimal high = node.get(2).decimalValue();
+            BigDecimal low = node.get(3).decimalValue();
+            BigDecimal close = node.get(4).decimalValue();
+            BigDecimal volume = node.get(5).decimalValue();
 
             return new ParadexMarketKlineDTO(timestamp, open, high, low, close, volume);
         }

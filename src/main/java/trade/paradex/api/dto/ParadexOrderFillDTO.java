@@ -3,6 +3,8 @@ package trade.paradex.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class ParadexOrderFillDTO {
 
@@ -13,7 +15,7 @@ public class ParadexOrderFillDTO {
     private long createdAt;
 
     @JsonProperty("fee")
-    private double fee;
+    private BigDecimal fee;
 
     @JsonProperty("fee_currency")
     private String feeCurrency;
@@ -34,21 +36,21 @@ public class ParadexOrderFillDTO {
     private String orderId;
 
     @JsonProperty("price")
-    private double price;
+    private BigDecimal price;
 
     @JsonProperty("realized_funding")
-    private double realizedFunding;
+    private BigDecimal realizedFunding;
 
     @JsonProperty("realized_pnl")
-    private double realizedPnl;
+    private BigDecimal realizedPnl;
 
     @JsonProperty("remaining_size")
-    private double remainingSize;
+    private BigDecimal remainingSize;
 
     @JsonProperty("side")
     private OrderSide side;
 
     @JsonProperty("size")
-    private double size;
+    private BigDecimal size;
 
 }

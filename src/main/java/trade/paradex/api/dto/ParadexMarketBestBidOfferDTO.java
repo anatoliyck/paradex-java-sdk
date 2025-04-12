@@ -3,20 +3,22 @@ package trade.paradex.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class ParadexMarketBestBidOfferDTO {
 
     @JsonProperty("ask")
-    private double ask;
+    private BigDecimal ask;
 
     @JsonProperty("ask_size")
-    private double askSize;
+    private BigDecimal askSize;
 
     @JsonProperty("bid")
-    private double bid;
+    private BigDecimal bid;
 
     @JsonProperty("bid_size")
-    private double bidSize;
+    private BigDecimal bidSize;
 
     @JsonProperty("last_updated_at")
     private long lastUpdatedAt;

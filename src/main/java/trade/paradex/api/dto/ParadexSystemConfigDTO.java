@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -39,7 +40,7 @@ public class ParadexSystemConfigDTO {
     private String l2WithdrawRelayerAddress;
 
     @JsonProperty("liquidation_fee")
-    private double liquidationFee;
+    private BigDecimal liquidationFee;
 
     @JsonProperty("oracle_address")
     private String oracleAddress;
@@ -57,10 +58,10 @@ public class ParadexSystemConfigDTO {
     private int paraclearDecimals;
 
     @JsonProperty("partial_liquidation_buffer")
-    private double partialLiquidationBuffer;
+    private BigDecimal partialLiquidationBuffer;
 
     @JsonProperty("partial_liquidation_share_increment")
-    private double partialLiquidationShareIncrement;
+    private BigDecimal partialLiquidationShareIncrement;
 
     @JsonProperty("starknet_chain_id")
     private String starknetChainId;
